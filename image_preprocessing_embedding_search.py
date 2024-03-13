@@ -49,7 +49,7 @@ def get_roi_stream(image_path):
 
 def get_vector_from_image_stream(image_stream) -> list:
     # Define the URL, headers, and data
-    url = "https://priya-azure-ai.cognitiveservices.azure.com//computervision/retrieval:vectorizeImage?api-version=2023-02-01-preview&modelVersion=latest"
+    url = f"{azure_ai_endpoint}/computervision/retrieval:vectorizeImage?api-version=2023-02-01-preview&modelVersion=latest"
     headers = {
         "Content-Type": "application/octet-stream",
         "Ocp-Apim-Subscription-Key": os.getenv("AZURE_AI_KEY")
@@ -78,23 +78,9 @@ def image_search(image_stream, search_client : SearchClient):
 
     return results
 
-image_filename = "Meesho_sample_query_blue_tshirt.jpg"
-image_path = f"C://Users/priyakedia/OneDrive - Microsoft/Desktop/{image_filename}"
-
-## Display query image
-image = Image.open(image_path)
-image.show()
-
-## Perform background removal of the image
-
-with open(image_path, "rb") as f:
-        image_data = f.read()
-
-# client = ComputerVisionClient(endpoint, CognitiveServicesCredentials(vision_key))
-# analysis = client.analyze_image_by_domain("BackgroundRemoval", "https://www.bing.com/ck/a?!&&p=895a59a048c28fcfJmltdHM9MTcxMDIwMTYwMCZpZ3VpZD0wYTU4MjAyYS1iYTEyLTZlNGQtMjgzOS0zNDA5YmJiNDZmZDgmaW5zaWQ9NTYzNA&ptn=3&ver=2&hsh=3&fclid=0a58202a-ba12-6e4d-2839-3409bbb46fd8&u=a1L2ltYWdlcy9zZWFyY2g_cT1pbWFnZSUyMG9mJTIwYSUyMHBlcnNvbiUyMHdlYXJpbmclMjBuaWtlJTIwc2hvZXMmRk9STT1JUUZSQkEmaWQ9Mzk4Q0MzODY1RjREODEyQUY3RjIzMjQ1NTg2QUQzODZEMDIxMzAwNA&ntb=1")
-
 def remove_background_from_image(image_stream):
-    endpoint = f"https://priya-azure-ai.cognitiveservices.azure.com//computervision/imageanalysis:segment?api-version=2023-02-01-preview"
+    # Update the endpoint uri
+    endpoint = f"{azure_ai_endpoint}/computervision/imageanalysis:segment?api-version=2023-02-01-preview"
     background_removal = "&mode=backgroundRemoval"
 
     headers = {
