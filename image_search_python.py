@@ -31,7 +31,7 @@ blob_list = container_client.list_blobs()
 
 def get_image_vector(image: str, is_local = False) -> list:
     # Define the URL, headers, and data
-    url = "https://priya-azure-ai.cognitiveservices.azure.com//computervision/retrieval:vectorizeImage?api-version=2023-02-01-preview&modelVersion=latest"
+    url = f"https://{AZURE_AI_SERVICES_ENDPOINT}/computervision/retrieval:vectorizeImage?api-version=2023-02-01-preview&modelVersion=latest"
     headers = {
         "Content-Type": "application/octet-stream",
         "Ocp-Apim-Subscription-Key": os.getenv("AZURE_AI_KEY")
@@ -55,6 +55,7 @@ def get_image_vector(image: str, is_local = False) -> list:
     # return the vector
     return response.json().get('vector')
 
+## Generate image embeddings and create a list of documents
 descriptions = []
 for i, blob in enumerate(blob_list):
    blob_name = blob["name"]
@@ -87,19 +88,10 @@ import json
 #         data.append(json_data)
 
 ## Upload the image embeddings to AI Search
-# search_client = SearchClient(endpoint=endpoint, index_name=index_name, credential=credential)
-# results = search_client.upload_documents(descriptions)
-# for result in results:
-#     print(f'Indexed {result.key} with status code {result.status_code}')
-
-## Search for images
-image_filename = "Meesho_sample_query_blue_tshirt.jpg"
-# image_path = f"C://Users/priyakedia/OneDrive - Microsoft/Desktop/{image_filename}"
-
-# image = Image.open(image_path)
-# image.show()
-
-# image_vector = get_image_vector(r"C://Users/priyakedia/OneDrive - Microsoft/Desktop/Celebs Exposure Shereen Bhan_003.jpg")
+search_client = SearchClient(endpoint=endpoint, index_name=index_name, credential=credential)
+results = search_client.upload_documents(descriptions)
+for result in results:
+    print(f'Indexed {result.key} with status code {result.status_code}')
 
 def image_search(image_file: str, search_client : SearchClient):
 
@@ -125,6 +117,6 @@ def image_search(image_file: str, search_client : SearchClient):
 search_client = SearchClient(endpoint=endpoint, index_name=index_name, credential=credential)
 
 ## Search the matching images in Azure AI Search
-image_filename = "Meesho_sample_query_blue_tshirt.jpg"
-search_results = image_search(f"C://Users/priyakedia/OneDrive - Microsoft/Desktop/{image_filename}", search_client)
+image_filename = "sample_file.jpg"
+search_results = image_search(f"{image_path}/{image_filename}", search_client)
 image_search('pexels-photo-1963641.jpeg')
