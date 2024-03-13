@@ -55,6 +55,23 @@ def get_image_vector(image: str, is_local = False) -> list:
     # return the vector
     return response.json().get('vector')
 
+def get_text_embeddings(input_text : str):
+    import os
+    from openai import AzureOpenAI
+
+    client = AzureOpenAI(
+    api_key = azure_openai_key,  
+    api_version = "2024-02-15-preview",
+    azure_endpoint =azure_openai_endpoint
+    )
+
+    response = client.embeddings.create(
+        input = "I am working on text embedding",
+        model= "text-embedding-ada-002"
+    )
+
+    return response.data[0].embedding
+
 ## Generate image embeddings and create a list of documents
 descriptions = []
 for i, blob in enumerate(blob_list):
